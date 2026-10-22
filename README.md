@@ -5,6 +5,8 @@ Useful function and scripts that are not important enough to structure into a st
 
 ### read_gmt.R
 
+Read a .gmt file into a list of named sets.
+
 ```R
 read_gmt <- function(path) {
   lines  <- readLines(path, warn = FALSE)
@@ -17,6 +19,9 @@ read_gmt <- function(path) {
 ```
 
 ### read_uniprot_fasta.R
+
+Read a fasta retrieved from UniProt (SwissProt reviewd) into a dataframe so sequences can easily be retrieved and mapped to identified peptides.
+Adheres to official UniProt fasta structure.
 
 ```R
 #' Read a UniProt FASTA file into a data.frame
