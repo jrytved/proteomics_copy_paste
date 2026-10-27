@@ -101,6 +101,37 @@ read_uniprot_fasta <- function(path) {
 ### swissprot_hgnc_map.py
 Stand-alone script to build a map between SwissProt/UniProt accessions and HGNC identifiers from official and updated resources.
 
+### kinase_library_predict.py
+Score upstream kinases for a table of identified phosphosites.
+
+```python
+def score_dia_nn_sites(sites, out_folder: str, seq_col = "Sequence"):
+
+    pobj = kl.PhosphoProteomics(sites, seq_col=seq_col)
+
+    path = Path(out_folder)
+    ser_thr_path = path / "ser_thr_predictions.tsv"
+    tyr_path = path / "tyr_predictions.tsv"
+    
+    ser_thr_predictions = pobj.predict(kin_type='ser_thr')
+    tyrosine_predictions = pobj.predict(kin_type='tyrosine')
+
+    ser_thr_predictions.to_csv(ser_thr_path, sep="\t", index=False)
+    tyrosine_predictions.to_csv(tyr_path, sep="\t", index=False)
+```
+
+Then pivot it longer when importing into R...
+
+```R
+ser_thr_kinase_preds_long <- ser_thr_kinase_preds %>%
+  pivot_longer(
+    cols = matches("_(score|score_rank|percentile|percentile_rank)$"),
+    names_to = c("kinase", ".value"),
+    names_pattern = "(.*)_(score|score_rank|percentile|percentile_rank)$",
+    values_drop_na = TRUE
+  )
+```
+
 
 
 
