@@ -3,6 +3,40 @@ Useful function and scripts that are not important enough to structure into a st
 
 ## R
 
+
+### tabulate_nicely.R
+Any data to a reasonably aesthetically pleasing table
+
+tabulate_nicely <- function(table, header.md, note.md){
+  
+    table  %>%
+      gt::gt() %>%
+      gt::tab_header(title = gt::md(header.md)) %>%
+      gt::opt_table_font(font = "Arial") %>%
+      gt::opt_table_lines(extent = "none") %>%
+      gt::tab_source_note(source_note = gt::md(note.md))%>%
+      gt::tab_options(
+        table.font.size                   = gt::px(12),
+        heading.align                     = "left",
+        heading.title.font.size           = gt::px(13),
+        column_labels.font.weight         = "bold",
+        column_labels.border.top.style    = "solid",      
+        column_labels.border.top.width    = gt::px(2),
+        column_labels.border.top.color    = "black",
+        column_labels.border.bottom.style = "solid",        
+        column_labels.border.bottom.width = gt::px(1),
+        column_labels.border.bottom.color = "black",
+        table_body.border.bottom.style    = "solid",      
+        table_body.border.bottom.width    = gt::px(2),
+        table_body.border.bottom.color    = "black",
+        data_row.padding                  = gt::px(3),
+        footnotes.font.size               = gt::px(10),
+        source_notes.font.size            = gt::px(10)
+      ) %>%
+     gt::cols_align(align = "right")
+  
+}
+
 ### read_gmt.R
 
 Read a .gmt file into a list of named sets.
