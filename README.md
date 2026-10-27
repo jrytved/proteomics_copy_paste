@@ -7,6 +7,8 @@ Useful function and scripts that are not important enough to structure into a st
 ### tabulate_nicely.R
 Any data to a reasonably aesthetically pleasing table
 
+```R
+
 tabulate_nicely <- function(table, header.md, note.md){
   
     table  %>%
@@ -36,6 +38,7 @@ tabulate_nicely <- function(table, header.md, note.md){
      gt::cols_align(align = "right")
   
 }
+```
 
 ### read_gmt.R
 
