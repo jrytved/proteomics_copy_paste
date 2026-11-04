@@ -40,6 +40,50 @@ tabulate_nicely <- function(table, header.md, note.md){
 }
 ```
 
+### filter_diann.R
+A convenient way of filtering a DIA-NN report with a list of the type:
+
+```R
+phospho.filters <- rlang::quos(
+  Q.Value <= 0.01,
+  Lib.Q.Value <= 0.01,
+  Lib.Peptidoform.Q.Value <= 0.01,
+  Peptidoform.Q.Value <= 0.01,
+  Proteotypic == TRUE,
+  Precursor.Normalised > 0
+)
+```
+```R
+filter_diann <- function(report, filters,
+                         protein_col   = "Protein.Group",
+                         precursor_col = "Precursor.Id") {
+  message("----------")
+  message("Filtering DIA-NN report!")
+  message("----------")
+
+  count_ids <- function(df) c(
+    proteins   = n_distinct(df[[protein_col]]),
+    precursors = n_distinct(df[[precursor_col]])
+  )
+
+  before <- count_ids(report)
+  message(sprintf("Start: %d proteins, %d precursors",
+                  before["proteins"], before["precursors"]))
+
+  for (f in filters) {
+    report <- filter(report, !!f)
+    after  <- count_ids(report)
+    lost   <- before - after
+    message(sprintf("%-25s -%d proteins, -%d precursors (remaining: %d / %d)",
+                    rlang::quo_text(f), lost["proteins"], lost["precursors"],
+                    after["proteins"], after["precursors"]))
+    before <- after
+  }
+  report
+}
+)
+```
+
 ### read_gmt.R
 
 Read a .gmt file into a list of named sets.
