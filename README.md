@@ -3,6 +3,35 @@ Useful function and scripts that are not important enough to structure into a st
 
 ## R
 
+### heatmap_values.R
+Base R heatmap with values in cells.
+
+```R
+heatmap_values <- function(m, digits = 2, cex = 0.8, ...) {
+  row_dend <- reorder(as.dendrogram(hclust(dist(m))), rowMeans(m))
+  col_dend <- reorder(as.dendrogram(hclust(dist(t(m)))), colMeans(m))
+
+  mo <- m[order.dendrogram(row_dend), order.dendrogram(col_dend)]
+
+  heatmap(m,
+          Rowv = row_dend, Colv = col_dend,
+          scale = "none",
+          add.expr = text(x = col(mo), y = row(mo),
+                          labels = round(mo, digits), cex = cex),
+          ...)
+}
+```
+
+For example
+
+```
+svg("./CellType_Changes/L1_Jaccard_Matrix.svg", width = 12, height=12)
+markerlist_l1 %>%
+  prr::compute_jaccard_index() %>%
+  heatmap_values(margins=c(10,10), main="L1 markers Jaccard")
+dev.off()
+```
+
 
 ### tabulate_nicely.R
 Any data to a reasonably aesthetically pleasing table
